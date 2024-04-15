@@ -3,11 +3,13 @@ Created on Mon Mar 25 01:22:09 2024
 
 @author: DJIMENEZ
 """
-# Librerias necesarias -------------------------------------------------------------------------
+# Librerias necesarias ---------------------------------------------------------------------------------------------------
 import subprocess
 import importlib
 import sys
 import os
+
+# Configuracion del directorio --------------------------------------------------------------------------------------------
 
 # Obtener la ruta del directorio del archivo de script actual
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -54,6 +56,7 @@ def create_virtual_environment(venv_name='venv', directory=None):
 # En caso contrario, debe de entrar a la consola de Windows (cmd) y ejecutar el comando:
 # Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 # Esto cambia la configuracion, pero solo para el usuario actual, lo cual no necesita permisos de admin
+# Se puede desactivar con el comando deactivate en la terminal
 def activate_virtual_environment(venv_path='venv'):
     # Construye el comando para activar el entorno
     activate_command = f"{venv_path}\\Scripts\\activate.bat"
