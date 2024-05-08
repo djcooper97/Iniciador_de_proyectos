@@ -57,9 +57,9 @@ def create_virtual_environment(venv_name='venv', directory=None):
 # Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 # Esto cambia la configuracion, pero solo para el usuario actual, lo cual no necesita permisos de admin
 # Se puede desactivar con el comando deactivate en la terminal
-def activate_virtual_environment(venv_path='venv'):
+def activate_virtual_environment(venv_name='venv'):
     # Construye el comando para activar el entorno
-    activate_command = f"{venv_path}\\Scripts\\activate.bat"
+    activate_command = f"{venv_name}\\Scripts\\activate.bat"
     
     # Verifica si el archivo de activación existe
     if os.path.exists(activate_command):
@@ -144,18 +144,26 @@ def create_requirements_file(directory=None):
 
 
 # Funcion para instalar las librarias especificadas en el archivo requirements
-def install_requirements(directory=None, on_venv:bool=True):
+def install_requirements(directory=None, on_venv:bool=True,venv_name='venv'):
     # Ubicar el directorio del ambiente virtual
-    venv_directory = 'venv' if directory is None else os.path.join(directory, 'venv')
+    venv_path = venv_name if directory is None else os.path.join(directory, venv_name)
 
     # Determinar la ruta del ejecutable de Python
-    if os.path.exists(venv_directory):
-        # Ruta dentro del ambiente virtual
-        python_executable = os.path.join(venv_directory, 'bin', 'python') if os.name != 'nt' else os.path.join(venv_directory, 'Scripts', 'python.exe')
+    if on_venv:
+        # Evalua la existencia del ambiente virtual para entrar o crear
+        if os.path.exists(venv_path):
+            # Ruta dentro del ambiente virtual
+            python_executable = os.path.join(venv_path, 'bin', 'python') if os.name != 'nt' else os.path.join(venv_path, 'Scripts', 'python.exe')
+            print('Ambiente virtual encontrado.')
+
+        else:
+            # Creacion de un ambiente virtual
+            create_virtual_environment()
+            print('Ambiente virtual no encontrado. Se ha creado un ambiente virtual.')
     else:
-        # Usar el Python del sistema si no existe el ambiente virtual
+        # Usar el Python del sistema
         python_executable = sys.executable
-        print("Ambiente virtual no encontrado. Usando el intérprete de Python del sistema.")
+        print("Las dependencias se instalarán en el intérprete de Python del sistema.")
 
     file_path = 'requirements.txt' if directory is None else os.path.join(directory, 'requirements.txt')
     if os.path.exists(file_path):
