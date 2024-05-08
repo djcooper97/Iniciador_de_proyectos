@@ -142,12 +142,25 @@ def create_requirements_file(directory=None):
         print(f"Error al crear el archivo requirements.txt en {file_path}: {ex}")
 
 
+
 # Funcion para instalar las librarias especificadas en el archivo requirements
-def install_requirements(directory=None):
+def install_requirements(directory=None, on_venv:bool=True):
+    # Ubicar el directorio del ambiente virtual
+    venv_directory = 'venv' if directory is None else os.path.join(directory, 'venv')
+
+    # Determinar la ruta del ejecutable de Python
+    if os.path.exists(venv_directory):
+        # Ruta dentro del ambiente virtual
+        python_executable = os.path.join(venv_directory, 'bin', 'python') if os.name != 'nt' else os.path.join(venv_directory, 'Scripts', 'python.exe')
+    else:
+        # Usar el Python del sistema si no existe el ambiente virtual
+        python_executable = sys.executable
+        print("Ambiente virtual no encontrado. Usando el intérprete de Python del sistema.")
+
     file_path = 'requirements.txt' if directory is None else os.path.join(directory, 'requirements.txt')
     if os.path.exists(file_path):
         try:
-            subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', file_path])
+            subprocess.check_call([python_executable, '-m', 'pip', 'install', '-r', file_path])
             print("Las dependencias se han instalado correctamente.")
         except subprocess.CalledProcessError as e:
             print("Ha ocurrido un error al instalar las dependencias. Detalles del error:", e)
