@@ -175,6 +175,36 @@ def install_requirements(directory=None, on_venv:bool=True,venv_name='venv'):
     else:
         print("El archivo requirements.txt no se encuentra en el directorio especificado.")
 
+# Funcion para crear archivo .bat que ejecute el script, este puede ayudar a automatizar su ejecucion usando el programador de tareas de windows
+def create_bat_file(script_name:str, directory:str=None, venv_name:str='venv', bat_file_name:str=None,):
+    # Ruta al entorno virtual
+    venv_path = venv_name if directory is None else os.path.join(directory, venv_name)
+
+    # Ruta completa al script
+    script_path = script_name if directory is None else os.path.join(directory, script_name)
+
+    # Nombre del archivo .bat
+    bat_file_name = os.path.basename(script_path) if bat_file_name is None else bat_file_name
+    bat_file_name = os.path.splitext(bat_file_name)[0] + '.bat'
+    
+    # Verificar si el entorno virtual existe
+    if os.path.exists(venv_path):
+        python_executable = os.path.join(venv_path, 'bin', 'python') if os.name != 'nt' else os.path.join(venv_path, 'Scripts', 'python.exe')
+        print('Se usará el ambiente virtual.')
+    else:
+        # Usar el intérprete de Python del sistema
+        python_executable = sys.executable
+        print("Se usará el intérprete de Python del sistema.")
+    
+    # Línea de comando para ejecutar el script
+    linea_comando = f'"{os.path.abspath(python_executable)}" "{os.path.abspath(script_path)}"'
+
+    # Crear el archivo .bat
+    with open(bat_file_name, 'w') as archivo_bat:
+        archivo_bat.write(linea_comando)
+    
+    print(f'Archivo {bat_file_name} creado con éxito.')
+
 # Llama a la función
 #create_virtual_environment()
 #activate_virtual_environment()
