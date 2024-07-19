@@ -114,6 +114,7 @@ config/credentials.yml
 
 # Peronsal files
 Iniciador_proyecto.py
+*.pdf
 """
 
     # Intentar escribir el contenido en el archivo .gitignore
