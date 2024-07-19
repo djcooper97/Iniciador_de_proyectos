@@ -111,6 +111,9 @@ node_modules/
 # Ignore secrets and credentials
 secrets.yaml
 config/credentials.yml
+
+# Peronsal files
+Iniciador_proyecto.py
 """
 
     # Intentar escribir el contenido en el archivo .gitignore
